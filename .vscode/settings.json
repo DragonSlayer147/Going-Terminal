@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.csproj": "msbuild",
+    },
+    "files.exclude": {
+        "src/**/bin": true,
+        "**/obj": true,
+        "**/.vs": true,
+    },
+    "omnisharp.defaultLaunchSolution": "GoingTerminal.sln",
+    "omnisharp.disableMSBuildDiagnosticWarning": true,
+    "omnisharp.enableEditorConfigSupport": true,
+}

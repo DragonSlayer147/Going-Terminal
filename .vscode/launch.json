@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build debug",
+            "program": "${workspaceFolder}/src/bin/Debug/net7.0/GoingTerminal.dll",
+            "args": ["-r"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+        },
+        {
+            "name": "Release",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build release",
+            "program": "${workspaceFolder}/src/bin/Release/net7.0/GoingTerminal.dll",
+            "args": ["-r"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false,
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+
+.*/
+!.github
+!.vscode
+!.config
+
+[Oo]bj/
+[Bb]in/
+
+*.g.cs
