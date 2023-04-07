@@ -10,4 +10,5 @@
     "omnisharp.defaultLaunchSolution": "GoingTerminal.sln",
     "omnisharp.disableMSBuildDiagnosticWarning": true,
     "omnisharp.enableEditorConfigSupport": true,
+    "editor.formatOnSave": true
 }

@@ -8,3 +8,4 @@
 [Bb]in/
 
 *.g.cs
+.mgstats

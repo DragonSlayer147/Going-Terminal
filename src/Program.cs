@@ -1,3 +1,9 @@
 ﻿
-using var game = new GoingTerminal.Game1();
-game.Run();
+namespace GoingTerminal;
+
+public static class Program {
+    public static void Main() {
+        using var game = new GoingTerminal.MainGame();
+        game.Run();
+    }
+}
