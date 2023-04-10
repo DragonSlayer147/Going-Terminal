@@ -6,12 +6,14 @@ namespace GoingTerminal.Core;
 /// <summary>
 /// Represents a <see cref="Component" /> with a drawable texture, position, and rectangle.
 /// </summary>
-internal abstract class Sprite : Component, IDrawableComponent {
+internal abstract class Sprite : DrawableGameComponent {
     private readonly Texture2D _texture;
+    private readonly SpriteBatch _spriteBatch;
 
     private Rectangle? _rectangle;
 
-    protected Sprite(Texture2D texture) {
+    protected Sprite(Game game, SpriteBatch spriteBatch, Texture2D texture) : base(game) {
+        _spriteBatch = spriteBatch;
         _texture = texture;
         Color = Color.White;
     }
@@ -36,9 +38,19 @@ internal abstract class Sprite : Component, IDrawableComponent {
         }
     }
 
-    public void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
-        spriteBatch.Draw(_texture, Position, Color.White);
+    public override void Draw(GameTime gameTime) {
+        _spriteBatch.Draw(
+            _texture,
+            Position,
+            null,
+            Color.White,
+            0,
+            Vector2.Zero,
+            1,
+            SpriteEffects.None,
+            DrawOrder / byte.MaxValue
+        );
     }
 
-    internal override void Update(GameTime gameTime) { }
+    public override void Update(GameTime gameTime) { }
 }

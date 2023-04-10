@@ -7,10 +7,10 @@ namespace GoingTerminal.Core;
 /// </summary>
 internal class Camera2D {
     private float _zoom;
-    private MainGame _game;
+    private readonly Vector2 _viewPort;
 
-    internal Camera2D(MainGame game) {
-        _game = game;
+    internal Camera2D(ref Vector2 viewPort) {
+        _viewPort = viewPort;
         _zoom = 1.0f;
         Rotation = 0;
         Position = Vector2.Zero;
@@ -26,6 +26,7 @@ internal class Camera2D {
         set {
             _zoom = value;
 
+            // A negative zoom will flip the viewport, so not allowed.
             if (_zoom < 0.1f)
                 _zoom = 0.1f;
         }
@@ -50,7 +51,7 @@ internal class Camera2D {
             return Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0))
                 * Matrix.CreateRotationZ(Rotation)
                 * Matrix.CreateScale(new Vector3(Zoom, Zoom, 1))
-                * Matrix.CreateTranslation(new Vector3(_game.ScreenWidth * 0.5f, _game.ScreenHeight * 0.5f, 0));
+                * Matrix.CreateTranslation(new Vector3(_viewPort.X * 0.5f, _viewPort.Y * 0.5f, 0));
         }
     }
 

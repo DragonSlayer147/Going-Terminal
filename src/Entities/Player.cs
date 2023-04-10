@@ -9,8 +9,9 @@ namespace GoingTerminal.Entities;
 /// Represents a <see cref="Sprite" /> that can move at a variable speed.
 /// </summary>
 internal sealed class Player : Sprite {
-    internal Player(Texture2D texture) : base(texture) {
+    internal Player(Game game, SpriteBatch spriteBatch, Texture2D texture) : base(game, spriteBatch, texture) {
         Input = Input.None;
+        DrawOrder = 200;
         Speed = 0;
     }
 
@@ -24,7 +25,7 @@ internal sealed class Player : Sprite {
     /// </summary>
     internal float Speed { get; init; }
 
-    internal override void Update(GameTime gameTime) {
+    public override void Update(GameTime gameTime) {
         var velocity = new Vector2();
 
         if (Keyboard.GetState().IsKeyDown(Input.Up))
