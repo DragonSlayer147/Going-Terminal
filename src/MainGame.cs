@@ -4,18 +4,22 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using GoingTerminal.Core;
 using GoingTerminal.Entities;
+using System.Linq;
 
 namespace GoingTerminal;
 
+/// <summary>
+/// The <see cref="Game" /> that houses everything.
+/// </summary>
 internal sealed class MainGame : Game {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Camera _camera;
+    private Camera2D _camera;
     private Player _player;
-    private List<Sprite> _sprites;
+    private List<Component> _components;
 
-    internal static int ScreenWidth = 1920;
-    internal static int ScreenHeight = 1080;
+    internal int ScreenWidth = 1920;
+    internal int ScreenHeight = 1080;
 
     internal MainGame() {
         _graphics = new GraphicsDeviceManager(this);
@@ -33,19 +37,32 @@ internal sealed class MainGame : Game {
     protected override void LoadContent() {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        _camera = new Camera();
+        _camera = new Camera2D(this);
         var playerTexture = Content.Load<Texture2D>("placeholder");
 
         _player = new Player(playerTexture) {
             Position = new Vector2(100, 100),
+            Input = new Input() {
+                Left = Keys.A,
+                Right = Keys.D,
+                Up = Keys.W,
+                Down = Keys.S,
+            },
+            Speed = 4,
         };
 
-        _sprites = new List<Sprite>() { };
+        _components = new List<Component>() { };
     }
 
     protected override void Update(GameTime gameTime) {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
+
+        // The order here matters, make sure the player is updated after other components and the camera is updated last.
+        foreach (var component in _components)
+            component.Update(gameTime);
+
+        _player.Update(gameTime);
 
         _camera.Follow(_player);
 
@@ -57,11 +74,10 @@ internal sealed class MainGame : Game {
 
         _spriteBatch.Begin(transformMatrix: _camera.Transform);
 
-        _player.Draw(_spriteBatch);
+        _player.Draw(gameTime, _spriteBatch);
 
-        foreach (var sprite in _sprites) {
-            sprite.Draw(_spriteBatch);
-        }
+        foreach (var sprite in _components.OfType<Sprite>())
+            sprite.Draw(gameTime, _spriteBatch);
 
         _spriteBatch.End();
 
