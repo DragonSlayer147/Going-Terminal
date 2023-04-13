@@ -53,6 +53,10 @@ internal sealed class MainGame : Game {
             },
             Speed = 4,
         };
+
+        Components.Add(
+            new Object2D.Rectangle(this, new Rectangle(0, 0, 200, 200))
+        );
     }
 
     protected override void Update(GameTime gameTime) {

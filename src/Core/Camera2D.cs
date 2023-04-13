@@ -4,6 +4,7 @@ namespace GoingTerminal.Core;
 
 /// <summary>
 /// Provides a viewport following a <see cref="Sprite" />. Supports zoom and rotation.
+/// Does not support a Z-axis, is only a 2D camera.
 /// </summary>
 internal class Camera2D {
     private float _zoom;
