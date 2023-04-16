@@ -1,7 +1,6 @@
-using GoingTerminal.Core;
 using Microsoft.Xna.Framework.Content;
 
-namespace GoingTerminal.Scenes;
+namespace GoingTerminal.Core;
 
 /// <summary>
 /// Represents a class created by the user that creates all the content of a scene.

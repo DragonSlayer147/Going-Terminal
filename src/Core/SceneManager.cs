@@ -20,10 +20,6 @@ internal static class SceneManager {
         if (_scenes.ContainsKey(name))
             throw new ArgumentException($"A scene already exists with the name '{name}'");
 
-        // This ensures that at least 1 scene is loaded.
-        if (_scenes.Count == 0)
-            _active = name;
-
         _scenes.Add(name, new Scene() { IsLoaded = false, Name = name });
         _sceneObjects.Add(name, new List<GameObject>());
     }
@@ -32,7 +28,7 @@ internal static class SceneManager {
     /// Gets the active scene.
     /// </summary>
     internal static Scene GetActiveScene() {
-        if (_scenes.Count == 0)
+        if (_active == null)
             throw new ArgumentException("No active scene");
 
         return _scenes[_active];
@@ -117,8 +113,8 @@ internal static class SceneManager {
     /// </summary>
     internal static class SceneObjectManager {
         internal static void AddRootGameObject(GameObject gameObject) {
-            if (_scenes.Count == 0)
-                throw new ArgumentException("No scene to attach the object to");
+            if (_active == null)
+                throw new ArgumentException("No active scene to attach the object to");
 
             _sceneObjects[_active].Add(gameObject);
         }
