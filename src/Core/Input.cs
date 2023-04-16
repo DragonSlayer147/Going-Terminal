@@ -5,19 +5,19 @@ namespace GoingTerminal.Core;
 /// <summary>
 /// Represents the keys used to indicate specified actions.
 /// </summary>
-internal record struct Input {
-    internal static Input None = new Input() {
+public record struct Input {
+    public static Input None = new Input() {
         Up = Keys.None,
         Down = Keys.None,
         Left = Keys.None,
         Right = Keys.None,
     };
 
-    internal Keys Up;
+    public Keys Up;
 
-    internal Keys Down;
+    public Keys Down;
 
-    internal Keys Left;
+    public Keys Left;
 
-    internal Keys Right;
+    public Keys Right;
 }

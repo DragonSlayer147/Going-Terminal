@@ -2,8 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using GoingTerminal.Core;
-using GoingTerminal.Entities;
-using System.Linq;
+using GoingTerminal.Scenes;
 
 namespace GoingTerminal;
 
@@ -11,18 +10,12 @@ namespace GoingTerminal;
 /// The <see cref="Game" /> that houses everything.
 /// </summary>
 internal sealed class MainGame : Game {
-    private static Vector2 _viewPort = new Vector2(1920, 1080);
-
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private Camera2D _camera;
-    private Player _player;
-
     internal MainGame() {
-        _graphics = new GraphicsDeviceManager(this);
-        _graphics.PreferredBackBufferHeight = (int)_viewPort.Y;
-        _graphics.PreferredBackBufferWidth = (int)_viewPort.X;
-        _graphics.IsFullScreen = true;
+        Screen.CurrentResolution = new Vector2(1920, 1080);
+        Screen.GraphicsDeviceManager = new GraphicsDeviceManager(this);
+        Screen.GraphicsDeviceManager.PreferredBackBufferHeight = (int)Screen.CurrentResolution.Y;
+        Screen.GraphicsDeviceManager.PreferredBackBufferWidth = (int)Screen.CurrentResolution.X;
+        Screen.GraphicsDeviceManager.IsFullScreen = true;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -30,67 +23,48 @@ internal sealed class MainGame : Game {
     protected override void Initialize() {
 #if DEBUG
         // Any debug info can go here
-        Window.Title = $"Going Terminal (Debug) {_viewPort}";
+        Window.Title = $"Going Terminal (Debug) {Screen.CurrentResolution}";
 #else
         Window.Title = "Going Terminal";
 #endif
+
+        SpriteRenderer.SpriteBatch = new SpriteBatch(GraphicsDevice);
+        Screen.GraphicsDevice = GraphicsDevice;
+
         base.Initialize();
     }
 
     protected override void LoadContent() {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        _camera = new Camera2D(ref _viewPort);
-        var playerTexture = Content.Load<Texture2D>("placeholder");
-
-        _player = new Player(this, _spriteBatch, playerTexture) {
-            Position = new Vector2(100, 100),
-            Input = new Input() {
-                Left = Keys.A,
-                Right = Keys.D,
-                Up = Keys.W,
-                Down = Keys.S,
-            },
-            Speed = 4,
-        };
-
-        Components.Add(
-            new Object2D.Rectangle(this, new Rectangle(0, 0, 200, 200))
-        );
+        new MainScene().CreateScene(Content);
     }
 
     protected override void Update(GameTime gameTime) {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // The order here matters, make sure the player is updated after other components and the camera is updated last.
-        foreach (var component in Components.OfType<IUpdateable>())
-            component.Update(gameTime);
-
-        _player.Update(gameTime);
-
-        _camera.Follow(_player);
+        foreach (var scene in SceneManager.GetLoadedScenes()) {
+            foreach (var gameObject in SceneManager.SceneObjectManager.GetRootGameObjects(scene.Name)) {
+                foreach (var component in gameObject.GetComponents<MonoBehavior>())
+                    component.Update();
+            }
+        }
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime) {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+        var camera = GameObject.FindWithTag("MainCamera");
 
-        _spriteBatch.Begin(SpriteSortMode.FrontToBack, transformMatrix: _camera.Transform);
-
-        _player.Draw(gameTime);
-
-        foreach (var component in Components.OfType<IDrawable>())
-            component.Draw(gameTime);
-
-        _spriteBatch.End();
+        if (camera == null)
+            // Fallback if there is no camera
+            Screen.GraphicsDevice.Clear(Color.Black);
+        else
+            camera.GetComponent<Camera>().Render();
 
         base.Draw(gameTime);
     }
 
     protected override void Dispose(bool disposing) {
-        _player.Dispose();
         base.Dispose(disposing);
     }
 }
