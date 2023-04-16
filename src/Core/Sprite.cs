@@ -16,8 +16,9 @@ internal sealed class Sprite {
     internal Sprite(Texture2D texture, Rectangle rectangle) {
         Texture = texture;
         Rectangle = rectangle;
+
         TextureRectangle = new Texture2D(Screen.GraphicsDevice, Rectangle.Width, Rectangle.Height);
-        Color[] data = new Color[Rectangle.Width * Rectangle.Height];
+        var data = new Color[Rectangle.Width * Rectangle.Height];
         Texture.GetData(0, Rectangle, data, 0, data.Length);
         TextureRectangle.SetData(data);
     }

@@ -20,15 +20,11 @@ internal static class SceneManager {
         if (_scenes.ContainsKey(name))
             throw new ArgumentException($"A scene already exists with the name '{name}'");
 
-        var isLoaded = false;
-
         // This ensures that at least 1 scene is loaded.
-        if (_scenes.Count == 0) {
+        if (_scenes.Count == 0)
             _active = name;
-            isLoaded = true;
-        }
 
-        _scenes.Add(name, new Scene() { IsLoaded = isLoaded, Name = name });
+        _scenes.Add(name, new Scene() { IsLoaded = false, Name = name });
         _sceneObjects.Add(name, new List<GameObject>());
     }
 
@@ -72,9 +68,10 @@ internal static class SceneManager {
         // See if the scene has not been loaded and can be loaded
         // Otherwise where already done
         if (_loadedScenes.Add(name)) {
-            var gameObjects = SceneObjectManager.GetRootGameObjects(name);
-
-
+            foreach (var gameObject in SceneObjectManager.GetRootGameObjects(name)) {
+                foreach (var component in gameObject.GetComponents<MonoBehavior>())
+                    component.Start();
+            }
 
             _scenes[name].IsLoaded = true;
         }

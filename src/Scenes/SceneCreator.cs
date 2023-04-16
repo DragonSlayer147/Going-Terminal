@@ -9,7 +9,6 @@ namespace GoingTerminal.Scenes;
 public abstract class SceneCreator {
     protected SceneCreator(string name) {
         SceneManager.CreateScene(name);
-        SceneManager.LoadScene(name);
         SceneManager.SetActiveScene(name);
     }
 

@@ -1,8 +1,9 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System;
 using GoingTerminal.Core;
 using GoingTerminal.Scenes;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace GoingTerminal;
 
@@ -11,31 +12,32 @@ namespace GoingTerminal;
 /// </summary>
 internal sealed class MainGame : Game {
     internal MainGame() {
-        Screen.CurrentResolution = new Vector2(1920, 1080);
-        Screen.GraphicsDeviceManager = new GraphicsDeviceManager(this);
-        Screen.GraphicsDeviceManager.PreferredBackBufferHeight = (int)Screen.CurrentResolution.Y;
-        Screen.GraphicsDeviceManager.PreferredBackBufferWidth = (int)Screen.CurrentResolution.X;
-        Screen.GraphicsDeviceManager.IsFullScreen = true;
+        Screen.GraphicsDeviceManager = new GraphicsDeviceManager(this) {
+            PreferredBackBufferWidth = 1920,
+            PreferredBackBufferHeight = 1080,
+            IsFullScreen = true
+        };
+
+        Window.AllowUserResizing = true;
+        Window.ClientSizeChanged += OnResize;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
 
     protected override void Initialize() {
-#if DEBUG
-        // Any debug info can go here
-        Window.Title = $"Going Terminal (Debug) {Screen.CurrentResolution}";
-#else
-        Window.Title = "Going Terminal";
-#endif
-
+        // Any Core setup code goes here
         SpriteRenderer.SpriteBatch = new SpriteBatch(GraphicsDevice);
         Screen.GraphicsDevice = GraphicsDevice;
+        Screen.Window = Window;
 
         base.Initialize();
     }
 
     protected override void LoadContent() {
+        // Any game setup code goes here
         new MainScene().CreateScene(Content);
+
+        SceneManager.LoadScene("MainScene");
     }
 
     protected override void Update(GameTime gameTime) {
@@ -66,5 +68,18 @@ internal sealed class MainGame : Game {
 
     protected override void Dispose(bool disposing) {
         base.Dispose(disposing);
+    }
+
+    private void UpdateTitle() {
+#if DEBUG
+        // Any debug info can go here
+        Window.Title = $"Going Terminal (Debug) {Screen.CurrentResolution}";
+#else
+        Window.Title = "Going Terminal";
+#endif
+    }
+
+    private void OnResize(object sender, EventArgs e) {
+        UpdateTitle();
     }
 }

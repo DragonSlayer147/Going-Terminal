@@ -1,6 +1,6 @@
-using Microsoft.Xna.Framework.Graphics;
 using GoingTerminal.Core;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GoingTerminal.Scenes;
 
@@ -15,8 +15,10 @@ public class MainScene : SceneCreator {
         spriteRenderer.Sprite = new Sprite(playerTexture);
 
         // Create the camera
-        var mainCamera = new GameObject("Main Camera", typeof(Camera));
-        mainCamera.Tag = "MainCamera";
+        var mainCamera = new GameObject("Main Camera", typeof(Camera)) {
+            Tag = "MainCamera"
+        };
+
         mainCamera.AddComponent<Scripts.FollowPlayer>(new {
             player = playerObject.Transform,
             size = spriteRenderer.Sprite.Size

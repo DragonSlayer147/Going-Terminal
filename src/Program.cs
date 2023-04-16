@@ -1,4 +1,4 @@
-﻿
+
 namespace GoingTerminal;
 
 public static class Program {
