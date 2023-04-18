@@ -17,8 +17,7 @@ public class PlayerMovement : MonoBehavior {
 
     public float speed = 4;
 
-    // We don't need to use FixedUpdate here because we are
-    // not interacting with a physics system currently
+    // We don't need to use FixedUpdate here because we are not using a physics system yet
     public override void Update() {
         var velocity = new Vector2();
 
