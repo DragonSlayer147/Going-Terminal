@@ -38,8 +38,18 @@ public sealed class Camera : Component {
     }
 
     private Matrix GetTransformMatrix() {
-        return Matrix.CreateTranslation(new Vector3(-Transform.Position.X, -Transform.Position.Y, 0))
+        return Matrix.CreateTranslation(
+                new Vector3(
+                    -Transform.Position.X + Screen.CurrentResolution.X * 0.5f,
+                    -Transform.Position.Y + Screen.CurrentResolution.Y * 0.5f,
+                    0
+                ))
             * Matrix.CreateRotationZ(Transform.Rotation)
-            * Matrix.CreateScale(new Vector3(Transform.Zoom, Transform.Zoom, 1));
+            * Matrix.CreateScale(
+                new Vector3(
+                    Transform.Zoom,
+                    Transform.Zoom,
+                    1
+                ));
     }
 }
