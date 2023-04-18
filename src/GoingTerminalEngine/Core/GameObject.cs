@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
 namespace GoingTerminalEngine;
@@ -8,8 +7,9 @@ namespace GoingTerminalEngine;
 /// <summary>
 /// Represents an object in a scene.
 /// </summary>
-public sealed class GameObject {
+public sealed class GameObject : Object {
     private readonly Dictionary<Type, Component> _components = new Dictionary<Type, Component>();
+    private string _tag;
 
     /// <summary>
     /// Creates a <see ref="GameObject" /> without a name or any Components.
@@ -50,7 +50,7 @@ public sealed class GameObject {
     public bool IsActiveInHierarchy {
         get {
             // Short circuiting here prevents unnecessary accessions.
-            return IsActive && (Transform.Parent?.GameObject?.IsActiveInHierarchy ?? true);
+            return IsActive && Scene.IsLoaded && (Transform.Parent?.GameObject?.IsActiveInHierarchy ?? true);
         }
     }
 
@@ -62,7 +62,22 @@ public sealed class GameObject {
     /// <summary>
     /// A user defined tag that marks this <see cref="GameObject" />.
     /// </summary>
-    public string Tag { get; set; }
+    public string Tag {
+        get {
+            return _tag;
+        }
+        set {
+            if (!TagsManager.RegisteredTags.Contains(value))
+                TagsManager.RegisterTag(value);
+
+            if (_tag == null)
+                TagsManager.AddTaggedObject(value, this);
+            else
+                TagsManager.UpdateTaggedObject(_tag, value, this);
+
+            _tag = value;
+        }
+    }
 
     /// <summary>
     /// A layer 0 to 31, determines rendering order (renders from 0 -> 31).
@@ -131,14 +146,17 @@ public sealed class GameObject {
     public T[] GetComponents<T>() where T : Component {
         var componentList = new List<T>();
 
-        foreach (var component in _components.Where(p => p.Key.IsSubclassOf(typeof(T))).Select(p => p.Value))
-            componentList.Add(component as T);
+        // If this is too slow can instead use IEnumerable and yield return to avoid unnecessary conversions
+        foreach (var component in _components) {
+            if (component.Key.IsSubclassOf(typeof(T)))
+                componentList.Add(component.Value as T);
+        }
 
         return componentList.ToArray();
     }
 
     /// <summary>
-    /// Searches the active <see cref="Scene" /> for a <see cref="GameObject" /> with the given tag.
+    /// Searches all Scenes for a <see cref="GameObject" /> with the given tag.
     /// Only returns the first found, so only use this method when expecting exactly one result. Use FindGameObjectsWithTag otherwise.
     /// Returns null if no <see cref="GameObject" /> with the given tag was found.
     /// </summary>
@@ -152,15 +170,13 @@ public sealed class GameObject {
     }
 
     /// <summary>
-    /// Searches the active <see cref="Scene" /> for all GameObjects with the given tag.
+    /// Searches all Scenes for all GameObjects with the given tag.
     /// </summary>
-    /// <param name="tag"></param>
-    /// <returns></returns>
     internal static GameObject[] FindGameObjectsWithTag(string tag) {
-        var scene = SceneManager.GetActiveScene();
-        var gameObjects = scene.GetRootGameObjects();
+        if (!TagsManager.RegisteredTags.Contains(tag))
+            return Array.Empty<GameObject>();
 
-        return gameObjects.Where(g => g.Tag == tag).ToArray();
+        return TagsManager.GetObjectsWithTag(tag);
     }
 
     private void AddComponentInternal(Type type) {

@@ -6,7 +6,7 @@ namespace GoingTerminalEngine;
 /// <summary>
 /// Represents a drawable texture.
 /// </summary>
-public sealed class Sprite {
+public sealed class Sprite : Object {
     private Texture2D _textureRectangle;
 
     /// <summary>

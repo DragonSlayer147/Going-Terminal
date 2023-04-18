@@ -5,7 +5,7 @@ namespace GoingTerminalEngine;
 /// <summary>
 /// Represents a class created by the user that creates all the content of a scene.
 /// </summary>
-public abstract class SceneCreator {
+public abstract class SceneCreator : Object {
     /// <summary>
     /// Creates and activates a new scene.
     /// </summary>

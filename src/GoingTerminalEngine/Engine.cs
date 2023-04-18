@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,9 +21,12 @@ public sealed class Engine : Game {
         Screen.GraphicsDeviceManager = new GraphicsDeviceManager(this) {
             PreferredBackBufferWidth = 1920,
             PreferredBackBufferHeight = 1080,
-            IsFullScreen = true
+            IsFullScreen = true,
+            SynchronizeWithVerticalRetrace = false,
         };
 
+        // IsFixedTimeStep = true;
+        // TargetElapsedTime = TimeSpan.FromMilliseconds(1000.0f / Screen.FrameRate);
         Window.AllowUserResizing = true;
         Window.ClientSizeChanged += OnResize;
         Content.RootDirectory = "Content";
@@ -41,6 +45,8 @@ public sealed class Engine : Game {
         SpriteRenderer.SpriteBatch = new SpriteBatch(GraphicsDevice);
         Screen.GraphicsDevice = GraphicsDevice;
         Screen.Window = Window;
+
+        TagsManager.RegisterTag("MainCamera");
 
         base.Initialize();
     }
@@ -71,13 +77,24 @@ public sealed class Engine : Game {
     }
 
     protected override void Draw(GameTime gameTime) {
-        var camera = GameObject.FindWithTag("MainCamera");
+        var cameras = GameObject.FindGameObjectsWithTag("MainCamera");
+        var seenScenes = new HashSet<string>();
 
-        if (camera == null)
+        foreach (var camera in cameras) {
+            if (!camera.IsActiveInHierarchy)
+                continue;
+
+            var cameraComponent = camera.GetComponent<Camera>();
+
+            if (cameraComponent.Enabled) {
+                if (seenScenes.Add(camera.Scene.Name))
+                    cameraComponent.Render();
+            }
+        }
+
+        if (seenScenes.Count == 0)
             // Fallback if there is no camera
             Screen.GraphicsDevice.Clear(Color.Black);
-        else
-            camera.GetComponent<Camera>().Render();
 
         base.Draw(gameTime);
     }

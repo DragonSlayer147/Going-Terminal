@@ -5,7 +5,7 @@ namespace GoingTerminalEngine;
 /// <summary>
 /// Represents a view in the game.
 /// </summary>
-public sealed class Scene {
+public sealed class Scene : Object {
     /// <summary>
     /// If the scene is currently visible/loaded.
     /// </summary>

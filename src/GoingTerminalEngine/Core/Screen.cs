@@ -17,4 +17,6 @@ public static class Screen {
     internal static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
 
     internal static GraphicsDevice GraphicsDevice { get; set; }
+
+    internal const int FrameRate = 60;
 }

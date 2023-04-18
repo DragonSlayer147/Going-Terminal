@@ -4,7 +4,7 @@ namespace GoingTerminalEngine;
 /// <summary>
 /// Represents a piece of <see cref="Core.GameObject" />.
 /// </summary>
-public abstract class Component {
+public abstract class Component : Object {
     protected Component() { }
 
     /// <summary>

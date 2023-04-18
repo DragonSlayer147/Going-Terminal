@@ -24,8 +24,8 @@ public class MainScene : SceneCreator {
             Tag = "MainCamera"
         };
 
-        camera.AddComponent<Scripts.FollowPlayer>(new {
-            player = player.Transform
-        });
+        // camera.AddComponent<Scripts.FollowPlayer>(new {
+        //     player = player.Transform
+        // });
     }
 }

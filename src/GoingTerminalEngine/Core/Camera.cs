@@ -6,7 +6,7 @@ namespace GoingTerminalEngine;
 /// <summary>
 /// Represents a <see cref="Component" /> that handles calling Renderers to display GameObjects to the screen.
 /// </summary>
-public sealed class Camera : Component {
+public sealed class Camera : Behavior {
     /// <summary>
     /// Creates a <see cref="Camera" />.
     /// The default background color is <see cref="Color.Black" />.
