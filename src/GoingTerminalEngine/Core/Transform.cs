@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace GoingTerminal.Core;
+namespace GoingTerminalEngine;
 
 /// <summary>
 /// Represents a position, zoom, and rotation.
@@ -8,6 +8,10 @@ namespace GoingTerminal.Core;
 public sealed class Transform : Component {
     private float _zoom;
 
+    /// <summary>
+    /// Creates a default <see cref="Transform" />.
+    /// No zoom, no rotation, and the position is set to 0,0.
+    /// </summary>
     public Transform() {
         _zoom = 1;
         Rotation = 0;
@@ -35,6 +39,10 @@ public sealed class Transform : Component {
     /// </summary>
     public float Rotation { get; set; }
 
+    /// <summary>
+    /// The parent of this <see cref="Transform" />.
+    /// Effectively allows nesting of GameObjects, as this <see cref="Transform" /> is now relative to the parent <see cref="Transform" />.
+    /// </summary>
     public Transform Parent { get; set; }
 
     /// <summary>
@@ -55,5 +63,9 @@ public sealed class Transform : Component {
         }
     }
 
+    /// <summary>
+    /// The position relative to <see cref="Parent" />.
+    /// If there is no parent, this is the same as <see cref="Position" />.
+    /// </summary>
     public Vector2 LocalPosition { get; set; }
 }

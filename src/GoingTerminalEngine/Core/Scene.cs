@@ -1,21 +1,24 @@
 using System.Collections.Generic;
 
-namespace GoingTerminal.Core;
+namespace GoingTerminalEngine;
 
 /// <summary>
 /// Represents a view in the game.
 /// </summary>
-internal sealed class Scene {
+public sealed class Scene {
     /// <summary>
     /// If the scene is currently visible/loaded.
     /// </summary>
-    internal bool IsLoaded { get; set; }
+    public bool IsLoaded { get; internal set; }
 
     /// <summary>
     /// The name of the scene.
     /// </summary>
-    internal string Name { get; set; }
+    public string Name { get; internal set; }
 
+    /// <summary>
+    /// Gets the GameObjects owned by this scene.
+    /// </summary>
     internal List<GameObject> GetRootGameObjects() {
         return SceneManager.SceneObjectManager.GetRootGameObjects(Name);
     }

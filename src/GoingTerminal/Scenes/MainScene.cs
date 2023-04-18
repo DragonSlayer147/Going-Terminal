@@ -1,4 +1,4 @@
-using GoingTerminal.Core;
+using GoingTerminalEngine;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -19,9 +19,9 @@ public class MainScene : SceneCreator {
             Tag = "MainCamera"
         };
 
-        mainCamera.AddComponent<Scripts.FollowPlayer>(new {
-            player = playerObject.Transform,
-            size = spriteRenderer.Sprite.Size
-        });
+        // mainCamera.AddComponent<Scripts.FollowPlayer>(new {
+        //     player = playerObject.Transform,
+        //     size = spriteRenderer.Sprite.Size
+        // });
     }
 }

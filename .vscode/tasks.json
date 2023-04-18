@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/GoingTerminal.csproj",
+                "${workspaceFolder}/src/GoingTerminal/GoingTerminal.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/GoingTerminal.csproj",
+                "${workspaceFolder}/src/GoingTerminal/GoingTerminal.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary",
                 "-c",
@@ -33,7 +33,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/GoingTerminal.csproj",
+                "${workspaceFolder}/src/GoingTerminal/GoingTerminal.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -47,7 +47,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/src/GoingTerminal.csproj"
+                "${workspaceFolder}/src/GoingTerminal/GoingTerminal.csproj"
             ],
             "problemMatcher": "$msCompile"
         },

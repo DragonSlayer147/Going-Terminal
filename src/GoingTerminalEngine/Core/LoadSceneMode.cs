@@ -1,10 +1,10 @@
 
-namespace GoingTerminal.Core;
+namespace GoingTerminalEngine;
 
 /// <summary>
 /// Different ways to load a scene.
 /// </summary>
-internal enum LoadSceneMode {
+public enum LoadSceneMode {
     // Load the scene
     Additive,
     // Load the scene, and also unload any other scenes

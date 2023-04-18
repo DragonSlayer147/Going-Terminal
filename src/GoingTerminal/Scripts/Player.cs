@@ -1,4 +1,4 @@
-using GoingTerminal.Core;
+using GoingTerminalEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -12,7 +12,7 @@ public class Player : MonoBehavior {
         Down = Keys.S,
     };
 
-    private float speed = 4;
+    private float speed = 100;
 
     public override void Update() {
         var velocity = new Vector2();
@@ -26,6 +26,7 @@ public class Player : MonoBehavior {
         if (Keyboard.GetState().IsKeyDown(input.Right))
             velocity.X = speed;
 
-        GameObject.Transform.Position += velocity;
+        Transform.Position += velocity * Time.DeltaTime;
+        Debug.Log($"{velocity}, {Time.DeltaTime}, {velocity * Time.DeltaTime}");
     }
 }

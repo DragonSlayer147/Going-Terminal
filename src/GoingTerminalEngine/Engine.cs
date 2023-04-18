@@ -1,17 +1,22 @@
 using System;
-using GoingTerminal.Core;
-using GoingTerminal.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace GoingTerminal;
+namespace GoingTerminalEngine;
 
 /// <summary>
 /// The <see cref="Game" /> that houses everything.
 /// </summary>
-internal sealed class MainGame : Game {
-    internal MainGame() {
+public sealed class Engine : Game {
+    private Type[] _sceneCreators;
+
+    /// <summary>
+    /// Creates an <see cref="Engine" />.
+    /// Can pass SceneCreators which create Scenes before the first update frame.
+    /// </summary>
+    /// <param name="sceneCreators">Every Type must inherit from <see cref="SceneCreator" />.</param>
+    public Engine(params Type[] sceneCreators) {
         Screen.GraphicsDeviceManager = new GraphicsDeviceManager(this) {
             PreferredBackBufferWidth = 1920,
             PreferredBackBufferHeight = 1080,
@@ -22,10 +27,17 @@ internal sealed class MainGame : Game {
         Window.ClientSizeChanged += OnResize;
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        _sceneCreators = sceneCreators;
+
+        foreach (var type in _sceneCreators) {
+            if (!type.IsSubclassOf(typeof(SceneCreator)))
+                throw new ArgumentException($"Provided type ('{type}') does not inherit from SceneCreator");
+        }
     }
 
     protected override void Initialize() {
-        // Any Core setup code goes here
+        // Any engine setup code goes here
         SpriteRenderer.SpriteBatch = new SpriteBatch(GraphicsDevice);
         Screen.GraphicsDevice = GraphicsDevice;
         Screen.Window = Window;
@@ -34,22 +46,26 @@ internal sealed class MainGame : Game {
     }
 
     protected override void LoadContent() {
-        // Any game setup code goes here
-        new MainScene().CreateScene(Content);
-
-        SceneManager.LoadScene("MainScene");
+        foreach (var sceneCreator in _sceneCreators)
+            (Activator.CreateInstance(sceneCreator) as SceneCreator).CreateScene(Content);
     }
 
     protected override void Update(GameTime gameTime) {
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
+        Time.DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
         foreach (var scene in SceneManager.GetLoadedScenes()) {
-            foreach (var gameObject in SceneManager.SceneObjectManager.GetRootGameObjects(scene.Name)) {
-                foreach (var component in gameObject.GetComponents<MonoBehavior>())
-                    component.Update();
+            foreach (var gameObject in scene.GetRootGameObjects()) {
+                foreach (var component in gameObject.GetComponents<MonoBehavior>()) {
+                    if (component.Enabled)
+                        component.Update();
+                }
             }
         }
+
+        SceneManager.UpdateScenes();
 
         base.Update(gameTime);
     }

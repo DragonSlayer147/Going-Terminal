@@ -1,4 +1,4 @@
-using GoingTerminal.Core;
+using GoingTerminalEngine;
 using Microsoft.Xna.Framework;
 
 namespace GoingTerminal.Scripts;
